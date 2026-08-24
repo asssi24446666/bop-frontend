@@ -10,15 +10,10 @@ import type { Candle, ConnectionState, Instrument, Quote, Timeframe } from "@/ty
 import type { MarketDataProvider } from "../MarketDataProvider";
 
 function resolveBaseUrl(): string {
-  const base = (import.meta as any).env?.VITE_API_BASE_URL;
-  if (!base) {
-    // Fail loudly and visibly instead of silently hitting a relative
-    // path that won't exist once this is built for Vercel/an APK.
-    console.error(
-      "VITE_API_BASE_URL is not set. Set it in frontend/.env (local) or in Vercel's Project Settings → Environment Variables."
-    );
-    return "";
-  }
+  const base =
+    (import.meta as any).env?.VITE_API_BASE_URL ||
+    "https://bop-backend-production-a221.up.railway.app";
+
   return `${base.replace(/\/$/, "")}/api/market-data`;
 }
 
