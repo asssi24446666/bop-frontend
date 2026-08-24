@@ -11,7 +11,7 @@
 // "DISCONNECTED" and the UI must show "DATA CONNECTION REQUIRED".
 // ==========================================================
 
-import type { Candle, ConnectionState, Instrument, Quote, Timeframe } from "../types";
+import type { Candle, ConnectionState, Instrument, Quote, Timeframe } from "../types/index.js";
 
 export interface MarketDataProvider {
   readonly name: string;
@@ -73,19 +73,32 @@ export class NoDataProvider implements MarketDataProvider {
     return this.state;
   }
 
-  async getQuote(): Promise<Quote | null> {
+  async getQuote(_instrument?: Instrument): Promise<Quote | null> {
     return null;
   }
 
-  async getHistoricalCandles(): Promise<Candle[]> {
+  async getHistoricalCandles(
+    _instrument?: Instrument,
+    _timeframe?: Timeframe,
+    _from?: number,
+    _to?: number
+  ): Promise<Candle[]> {
     return [];
   }
 
-  async getRecentCandles(): Promise<Candle[]> {
+  async getRecentCandles(
+    _instrument?: Instrument,
+    _timeframe?: Timeframe,
+    _count?: number
+  ): Promise<Candle[]> {
     return [];
   }
 
-  subscribe(): () => void {
+  subscribe(
+    _instrument?: Instrument,
+    _timeframe?: Timeframe,
+    _onCandle?: (candle: Candle) => void
+  ): () => void {
     return () => {};
   }
 
@@ -95,4 +108,4 @@ export class NoDataProvider implements MarketDataProvider {
       this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
-}
+ }
