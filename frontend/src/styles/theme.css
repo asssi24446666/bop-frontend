@@ -1,0 +1,247 @@
+/* ==========================================================
+   BOP — BANK OF PROFIT — Dark institutional fintech theme.
+   Deep navy/black base, restrained metallic gold accent, green
+   for profit, red for loss. Not a gambling-app palette: gold is
+   used only for the single most important number on any screen.
+   ========================================================== */
+
+:root {
+  --bop-bg: #0a0e17;
+  --bop-bg-elevated: #10151f;
+  --bop-bg-card: #141a26;
+  --bop-border: #232b3a;
+  --bop-gold: #c9a24b;
+  --bop-gold-soft: #8f7638;
+  --bop-text: #eef1f6;
+  --bop-text-dim: #8892a6;
+  --bop-green: #35c281;
+  --bop-red: #e5566a;
+  --bop-blue: #4d8fdb;
+  --radius: 14px;
+  --font-display: "Space Grotesk", "Inter", -apple-system, sans-serif;
+  --font-body: "Inter", -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--bop-bg);
+  color: var(--bop-text);
+  font-family: var(--font-body);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-image: radial-gradient(circle at 50% -10%, rgba(201, 162, 75, 0.06), transparent 55%);
+}
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 76px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 8px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand .mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--bop-text);
+}
+
+.brand .mark span { color: var(--bop-gold); }
+
+.brand .full-name {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--bop-text-dim);
+  margin-top: 4px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--bop-border);
+  background: var(--bop-bg-elevated);
+}
+
+.dot { width: 7px; height: 7px; border-radius: 50%; }
+.dot.live { background: var(--bop-green); box-shadow: 0 0 8px var(--bop-green); }
+.dot.down { background: var(--bop-red); }
+
+.page {
+  flex: 1;
+  padding: 4px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--bop-bg-card);
+  border: 1px solid var(--bop-border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bop-text-dim);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.data-required {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 28px 12px;
+  color: var(--bop-text-dim);
+}
+
+.data-required .headline {
+  font-family: var(--font-display);
+  color: var(--bop-red);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.gold-number {
+  font-family: var(--font-mono);
+  color: var(--bop-gold);
+  font-weight: 600;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-label { font-size: 11px; color: var(--bop-text-dim); margin-bottom: 2px; }
+.stat-value { font-family: var(--font-mono); font-size: 16px; font-weight: 600; }
+
+.tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tag.buy { background: rgba(53, 194, 129, 0.15); color: var(--bop-green); }
+.tag.sell { background: rgba(229, 86, 106, 0.15); color: var(--bop-red); }
+.tag.wait { background: rgba(201, 162, 75, 0.15); color: var(--bop-gold); }
+.tag.no-trade { background: rgba(136, 146, 166, 0.15); color: var(--bop-text-dim); }
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--bop-border);
+  background: var(--bop-bg-elevated);
+  color: var(--bop-text);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.btn.primary {
+  background: var(--bop-gold);
+  border-color: var(--bop-gold);
+  color: #16130a;
+}
+
+.btn-row { display: flex; gap: 8px; }
+.btn-row .btn { flex: 1; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  background: var(--bop-bg-elevated);
+  border-top: 1px solid var(--bop-border);
+  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--bop-text-dim);
+  background: none;
+  border: none;
+  padding: 6px 0;
+  min-height: 48px;
+}
+
+.nav-item.active { color: var(--bop-gold); }
+.nav-item .icon { font-size: 18px; }
+
+.diagnostic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bop-border);
+  font-size: 12px;
+}
+.diagnostic-row:last-child { border-bottom: none; }
+.diagnostic-pass { color: var(--bop-green); font-weight: 700; font-size: 11px; }
+.diagnostic-fail { color: var(--bop-red); font-weight: 700; font-size: 11px; }
+
+.settings-tabs { display: flex; gap: 6px; margin-bottom: 6px; }
+.settings-tab {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bop-bg-elevated);
+  border: 1px solid var(--bop-border);
+  color: var(--bop-text-dim);
+}
+.settings-tab.active { color: var(--bop-gold); border-color: var(--bop-gold); }
+
+.field-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--bop-border); font-size: 13px; }
+.field-row:last-child { border-bottom: none; }
