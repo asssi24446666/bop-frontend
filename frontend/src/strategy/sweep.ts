@@ -8,8 +8,8 @@
 import type { Candle, LiquidityZone, SweepResult } from "@/types";
 import { calculateATR } from "./volatility";
 
-const MIN_SWEEP_RATIO = 0.15; // sweep must clear the level by a meaningful fraction of ATR
-const MAX_SWEEP_RATIO = 3.0; // beyond this it's a clean breakout, not a sweep
+const MIN_SWEEP_RATIO = 0.05; // sweep must clear the level by a meaningful fraction of ATR
+const MAX_SWEEP_RATIO = 5.0; // beyond this it's a clean breakout, not a sweep
 
 export function detectSweep(candles: Candle[], zone: LiquidityZone): SweepResult {
   if (candles.length < 15) {
