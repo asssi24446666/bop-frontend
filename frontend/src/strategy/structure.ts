@@ -27,7 +27,7 @@ export function checkStructureConfirmation(candles: Candle[], direction: Directi
 
   const body = Math.abs(last.close - last.open);
   const range = last.high - last.low;
-  const displaced = range > 0 && body / range > 0.55;
+  const displaced = range > 0 && body / range > 0.35;
 
   const confirmed = brokeMicroStructure && displaced;
 
