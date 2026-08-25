@@ -26,7 +26,3 @@ export class NoNewsProvider implements NewsProvider {
     return [];
   }
 }
-
-export function getNewsProvider(): NewsProvider {
-  return new NoNewsProvider();
-}
