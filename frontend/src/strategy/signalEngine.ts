@@ -31,7 +31,7 @@ import { calculateBopScore } from "./bopScore";
 
 function sensitivityFloor(base: number, sensitivity: BopSettings["signalSensitivity"]): number {
   if (sensitivity === "LOW") return base + 10;
-  if (sensitivity === "HIGH") return Math.max(60, base - 10); // never below the hard 60 "NO_TRADE" line
+  if (sensitivity === "HIGH") return Math.max(30, base - 10); // soft floor — user-configured, not the old hard 60 line
   return base;
 }
 
@@ -90,7 +90,7 @@ export function generateSignal(
 
   // 1. Meaningful liquidity
   const zones = detectLiquidityZones(instrument, "15M", candles);
-  const meaningfulZones = zones.filter((z) => z.score >= 40 && !z.consumed);
+  const meaningfulZones = zones.filter((z) => z.score >= 20 && !z.consumed);
   diagnostics.push({
     name: "Liquidity", pass: meaningfulZones.length > 0,
     detail: meaningfulZones.length > 0 ? `${meaningfulZones.length} meaningful zone(s) detected` : "No meaningful liquidity zones detected"
@@ -193,4 +193,4 @@ export function generateSignal(
   };
 
   return signal;
-}
+    }
