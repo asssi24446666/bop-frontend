@@ -1,46 +1,120 @@
 import { useEffect, useState } from "react";
-import type { BopSignal } from "@/types";
-import { getAllSignals } from "@/signals/signalStore";
+import { getMarketDataProvider } from "@/market-data";
+import type { BopSignal, ConnectionState, Quote } from "@/types";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
+import { DataRequired } from "@/components/DataRequired";
+import { SignalCard } from "@/components/SignalCard";
+import { DEFAULT_SETTINGS } from "@/types";
+import { scanInstrument } from "@/hooks/useMarketScan";
+import { saveSignal } from "@/signals/signalStore";
 
-const TABS = ["ALL", "PROFIT", "LOSS", "ACTIVE", "EXPIRED", "CANCELLED"] as const;
+export function Home() {
+  const [conn, setConn] = useState<ConnectionState>(getMarketDataProvider().getConnectionState());
+  const [quote, setQuote] = useState<Quote | null>(null);
+  const [bestSetup, setBestSetup] = useState<BopSignal | null>(null);
+  const [loading, setLoading] = useState(false);
 
-export function History() {
-  const [tab, setTab] = useState<typeof TABS[number]>("ALL");
-  const [signals, setSignals] = useState<BopSignal[]>([]);
+  const primary = DEFAULT_SETTINGS.primaryAsset;
+  const isLive = conn.status === "CONNECTED";
 
   useEffect(() => {
-    getAllSignals().then(setSignals);
+    const provider = getMarketDataProvider();
+    setConn(provider.getConnectionState());
+    return provider.onConnectionStateChange(setConn);
   }, []);
 
-  const filtered = signals.filter((s) => tab === "ALL" || s.status === tab);
+  useEffect(() => {
+    if (!isLive) {
+      setQuote(null);
+      setBestSetup(null);
+      return;
+    }
+    let cancelled = false;
+
+    async function loadPrimaryMarket() {
+      setLoading(true);
+      const provider = getMarketDataProvider();
+      const [q, signal] = await Promise.all([
+        provider.getQuote(primary),
+        scanInstrument(primary)
+      ]);
+      if (cancelled) return;
+      setQuote(q);
+      setBestSetup(signal);
+      await saveSignal(signal);
+      setLoading(false);
+    }
+
+    loadPrimaryMarket();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLive, primary]);
 
   return (
     <div className="page">
-      <div className="settings-tabs" style={{ flexWrap: "wrap" }}>
-        {TABS.map((t) => (
-          <button key={t} className={`settings-tab${tab === t ? " active" : ""}`} onClick={() => setTab(t)}>
-            {t}
-          </button>
-        ))}
+      <div className="card">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="card-title" style={{ marginBottom: 0 }}>PRIMARY MARKET · {primary}</div>
+          <ConnectionStatus state={conn} />
+        </div>
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="card">
-          <p style={{ fontSize: 13, color: "var(--bop-text-dim)", margin: 0 }}>
-            No {tab === "ALL" ? "" : tab.toLowerCase() + " "}signals recorded yet. History is permanent — it survives app restarts and refreshes.
-          </p>
-        </div>
+      {!isLive ? (
+        <DataRequired detail={`Connect ${primary} to a real market-data provider to see live price, bias, regime, volatility, and the BOP Score.`} />
       ) : (
-        filtered.map((s) => (
-          <div className="card" key={s.id}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <strong>{s.instrument}</strong>
-              <span>{s.status}</span>
+        <div className="card">
+          <div className="grid-2">
+            <div>
+              <div className="stat-label">Current Price</div>
+              <div className="stat-value">{quote ? quote.last.toFixed(2) : loading ? "…" : "—"}</div>
             </div>
-            <div style={{ fontSize: 12, color: "var(--bop-text-dim)" }}>{s.reason}</div>
+            <div>
+              <div className="stat-label">Bid / Ask</div>
+              <div className="stat-value">{quote ? `${quote.bid.toFixed(2)} / ${quote.ask.toFixed(2)}` : "—"}</div>
+            </div>
+            <div>
+              <div className="stat-label">Market Bias</div>
+              <div className="stat-value">{bestSetup ? bestSetup.htfBias.replace("_", " ") : "—"}</div>
+            </div>
+            <div>
+              <div className="stat-label">Market Regime</div>
+              <div className="stat-value">{bestSetup ? bestSetup.regime.replace("_", " ") : "—"}</div>
+            </div>
+            <div>
+              <div className="stat-label">Volatility</div>
+              <div className="stat-value">{bestSetup ? bestSetup.volatility.replace("_", " ") : "—"}</div>
+            </div>
+            <div>
+              <div className="stat-label">BOP Score</div>
+              <div className="stat-value gold-number">{bestSetup ? `${bestSetup.bopScore.total}/100` : "—"}</div>
+            </div>
           </div>
-        ))
+        </div>
       )}
+
+      <div className="card">
+        <div className="card-title">BEST CURRENT SETUP</div>
+        {!isLive ? (
+          <p style={{ fontSize: 13, color: "var(--bop-text-dim)", margin: 0 }}>
+            NO TRADE — data connection required before any setup can be evaluated.
+          </p>
+        ) : loading ? (
+          <p style={{ fontSize: 13, color: "var(--bop-text-dim)", margin: 0 }}>Evaluating {primary}...</p>
+        ) : bestSetup && (bestSetup.decision === "BUY" || bestSetup.decision === "SELL") ? (
+          <SignalCard signal={bestSetup} />
+        ) : (
+          <p style={{ fontSize: 13, color: "var(--bop-text-dim)", margin: 0 }}>
+            {bestSetup ? bestSetup.reason : "No valid setup currently meets BOP requirements."}
+          </p>
+        )}
+      </div>
+
+      <div className="card" style={{ textAlign: "center" }}>
+        <a href="#/markets" className="btn primary" style={{ width: "100%", display: "block", textDecoration: "none", boxSizing: "border-box" }}>
+          SCAN MARKETS
+        </a>
+      </div>
     </div>
   );
-}
+              }
