@@ -2,16 +2,22 @@ import { useEffect, useState } from "react";
 import { DEFAULT_SETTINGS } from "@/types";
 import type { BopSettings, ConnectionState } from "@/types";
 import { getMarketDataProvider } from "@/market-data";
+import { getNewsProvider } from "@/news";
 
 export function Settings() {
   const [settings, setSettings] = useState<BopSettings>(DEFAULT_SETTINGS);
   const [advanced, setAdvanced] = useState(false);
   const [conn, setConn] = useState<ConnectionState>(getMarketDataProvider().getConnectionState());
+  const [newsAvailable, setNewsAvailable] = useState(false);
 
   useEffect(() => {
     const provider = getMarketDataProvider();
     setConn(provider.getConnectionState());
     return provider.onConnectionStateChange(setConn);
+  }, []);
+
+  useEffect(() => {
+    getNewsProvider().checkStatus().then(setNewsAvailable);
   }, []);
 
   const isLive = conn.status === "CONNECTED";
@@ -61,7 +67,12 @@ export function Settings() {
             {isLive ? `LIVE (${conn.provider ?? "connected"})` : "DISCONNECTED"}
           </span>
         </div>
-        <div className="field-row"><span>News Provider</span><span style={{ color: "var(--bop-red)" }}>NEWS DATA UNAVAILABLE</span></div>
+        <div className="field-row">
+          <span>News Provider</span>
+          <span style={{ color: newsAvailable ? "var(--bop-green)" : "var(--bop-red)" }}>
+            {newsAvailable ? "LIVE (fmp)" : "NEWS DATA UNAVAILABLE"}
+          </span>
+        </div>
         <div className="field-row"><span>Broker</span><span style={{ color: "var(--bop-red)" }}>NOT CONFIGURED</span></div>
         <p style={{ fontSize: 12, color: "var(--bop-text-dim)" }}>
           Configure providers via the backend .env (see README) — API keys are never entered or stored in this app directly.
@@ -69,4 +80,4 @@ export function Settings() {
       </div>
     </div>
   );
-            }
+          }
