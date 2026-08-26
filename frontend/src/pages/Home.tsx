@@ -8,11 +8,14 @@ import { DEFAULT_SETTINGS } from "@/types";
 import { scanInstrument } from "@/hooks/useMarketScan";
 import { saveSignal } from "@/signals/signalStore";
 
+const AUTO_REFRESH_MS = 30000; // 30s — safe under Twelve Data's free-tier rate limit
+
 export function Home() {
   const [conn, setConn] = useState<ConnectionState>(getMarketDataProvider().getConnectionState());
   const [quote, setQuote] = useState<Quote | null>(null);
   const [bestSetup, setBestSetup] = useState<BopSignal | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   const primary = DEFAULT_SETTINGS.primaryAsset;
   const isLive = conn.status === "CONNECTED";
@@ -31,8 +34,8 @@ export function Home() {
     }
     let cancelled = false;
 
-    async function loadPrimaryMarket() {
-      setLoading(true);
+    async function loadPrimaryMarket(showSpinner: boolean) {
+      if (showSpinner) setLoading(true);
       const provider = getMarketDataProvider();
       const [q, signal] = await Promise.all([
         provider.getQuote(primary),
@@ -42,12 +45,16 @@ export function Home() {
       setQuote(q);
       setBestSetup(signal);
       await saveSignal(signal);
-      setLoading(false);
+      setLastUpdated(Date.now());
+      if (showSpinner) setLoading(false);
     }
 
-    loadPrimaryMarket();
+    loadPrimaryMarket(true);
+    const interval = setInterval(() => loadPrimaryMarket(false), AUTO_REFRESH_MS);
+
     return () => {
       cancelled = true;
+      clearInterval(interval);
     };
   }, [isLive, primary]);
 
@@ -58,6 +65,11 @@ export function Home() {
           <div className="card-title" style={{ marginBottom: 0 }}>PRIMARY MARKET · {primary}</div>
           <ConnectionStatus state={conn} />
         </div>
+        {isLive && lastUpdated && (
+          <div style={{ fontSize: 10, color: "var(--bop-text-dim)", marginTop: 6 }}>
+            Auto-updates every 30s · last: {new Date(lastUpdated).toLocaleTimeString()}
+          </div>
+        )}
       </div>
 
       {!isLive ? (
@@ -112,7 +124,7 @@ export function Home() {
 
       <div className="card" style={{ textAlign: "center" }}>
         <a href="#/markets" className="btn primary" style={{ width: "100%", display: "block", textDecoration: "none", boxSizing: "border-box" }}>
-          SCAN MARKETS
+          VIEW ALL MARKETS
         </a>
       </div>
     </div>
