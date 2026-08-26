@@ -209,10 +209,7 @@ export const DEFAULT_WEIGHTS: BopWeights = {
 
 export const DEFAULT_SETTINGS: BopSettings = {
   primaryAsset: "XAUUSD",
-  enabledInstruments: [
-    "XAUUSD", "EURUSD", "GBPUSD", "USDJPY", "USDCHF",
-    "AUDUSD", "USDCAD", "BTCUSD", "ETHUSD", "NAS100", "US30", "SPX500", "WTIUSD"
-  ],
+  enabledInstruments: ["XAUUSD", "BTCUSD"],
   timeframes: { htf: "4H", bias: "1H", setup: "15M", entry: "5M" },
   riskPerTradePercent: 0.5,
   minimumBopScore: 45,
@@ -285,4 +282,4 @@ export interface BacktestResult {
   worstTradeR: number;
   winningStreak: number;
   losingStreak: number;
-}
+    }
