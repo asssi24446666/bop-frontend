@@ -37,3 +37,4 @@ export function useSignalMonitor() {
       clearInterval(interval);
     };
   }, []);
+}
