@@ -29,7 +29,7 @@ export function SignalCard({ signal }: { signal: BopSignal }) {
           <div><div className="stat-label">TP</div><div className="stat-value">{signal.takeProfit.toFixed(2)}</div></div>
           <div><div className="stat-label">RR</div><div className="stat-value gold-number">1:{signal.riskRewardRatio?.toFixed(2)}</div></div>
         </div>
-      ) : (
+      ))}
         <p style={{ fontSize: 13, color: "var(--bop-text-dim)", marginTop: 0 }}>{signal.reason}</p>
       )}
 
