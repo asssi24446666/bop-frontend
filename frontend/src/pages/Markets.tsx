@@ -6,7 +6,7 @@ import { scanMarkets, rankSignals } from "@/hooks/useMarketScan";
 import { activateIfTradeable } from "@/signals/activateHelper";
 import { SignalCard } from "@/components/SignalCard";
 import { DataRequired } from "@/components/DataRequired";
-import { saveSignal } from "@/signals/signalStore.ts";
+import { saveSignal } from "@/pages/signals.ts";
 
 const AUTO_SCAN_MS = 120000; // 2 minutes — full 13-instrument scan repeated on this cycle, safe under the free data plan's rate limit
 
