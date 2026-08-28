@@ -49,7 +49,7 @@ async function syncToBackend(signal: BopSignal): Promise<void> {
   const base = resolveApiBase();
   if (!base) return;
   try {
-    await fetch(${base}/api/signals, {
+    await fetch(`${base}/api/signals`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(toBackendPayload(signal))

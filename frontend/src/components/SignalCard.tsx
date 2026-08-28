@@ -24,23 +24,41 @@ export function SignalCard({ signal }: { signal: BopSignal }) {
 
       {signal.entry && signal.stopLoss && signal.takeProfit ? (
         <div className="grid-2" style={{ marginBottom: 10 }}>
-          <div><div className="stat-label">Entry</div><div className="stat-value">{signal.entry.toFixed(2)}</div></div>
-          <div><div className="stat-label">SL</div><div className="stat-value">{signal.stopLoss.toFixed(2)}</div></div>
-          <div><div className="stat-label">TP</div><div className="stat-value">{signal.takeProfit.toFixed(2)}</div></div>
-          <div><div className="stat-label">RR</div><div className="stat-value gold-number">1:{signal.riskRewardRatio?.toFixed(2)}</div></div>
+          <div>
+            <div className="stat-label">Entry</div>
+            <div className="stat-value">{signal.entry.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="stat-label">SL</div>
+            <div className="stat-value">{signal.stopLoss.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="stat-label">TP</div>
+            <div className="stat-value">{signal.takeProfit.toFixed(2)}</div>
+          </div>
+          <div>
+            <div className="stat-label">RR</div>
+            <div className="stat-value gold-number">1:{signal.riskRewardRatio?.toFixed(2)}</div>
+          </div>
         </div>
-      ))}
-        <p style={{ fontSize: 13, color: "var(--bop-text-dim)", marginTop: 0 }}>{signal.reason}</p>
-      )}
+      ) : null}
+
+      <p style={{ fontSize: 13, color: "var(--bop-text-dim)", marginTop: 0 }}>{signal.reason}</p>
 
       <div className="grid-2" style={{ marginBottom: 12 }}>
-        <div><div className="stat-label">BOP Score</div><div className="stat-value gold-number">{signal.bopScore.total}/100</div></div>
-        <div><div className="stat-label">Status</div><div className="stat-value">{signal.status}</div></div>
+        <div>
+          <div className="stat-label">BOP Score</div>
+          <div className="stat-value gold-number">{signal.bopScore.total}/100</div>
+        </div>
+        <div>
+          <div className="stat-label">Status</div>
+          <div className="stat-value">{signal.status}</div>
+        </div>
       </div>
 
       <div className="btn-row">
-        <button className={btn${panel === "view" ? " primary" : ""}} onClick={() => toggle("view")}>VIEW</button>
-        <button className={btn${panel === "why" ? " primary" : ""}} onClick={() => toggle("why")}>WHY?</button>
+        <button className={`btn${panel === "view" ? " primary" : ""}`} onClick={() => toggle("view")}>VIEW</button>
+        <button className={`btn${panel === "why" ? " primary" : ""}`} onClick={() => toggle("why")}>WHY?</button>
         <button className="btn" disabled style={{ opacity: 0.5 }} title="Chart view isn't built yet">CHART</button>
       </div>
 
