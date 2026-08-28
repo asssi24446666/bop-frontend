@@ -6,7 +6,7 @@ import { DataRequired } from "@/components/DataRequired";
 import { SignalCard } from "@/components/SignalCard";
 import { DEFAULT_SETTINGS } from "@/types";
 import { scanInstrument } from "@/hooks/useMarketScan";
-import { saveSignal } from "@/signals/signalStore";
+import { activateIfTradeable } from "@/signals/activateHelper";
 
 const AUTO_REFRESH_MS = 30000; // 30s — safe under Twelve Data's free-tier rate limit
 
@@ -44,7 +44,7 @@ export function Home() {
       if (cancelled) return;
       setQuote(q);
       setBestSetup(signal);
-      await saveSignal(signal);
+      await saveSignal(activateIfTradeable(signal));
       setLastUpdated(Date.now());
       if (showSpinner) setLoading(false);
     }
