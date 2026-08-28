@@ -7,7 +7,7 @@ import { SignalCard } from "@/components/SignalCard";
 import { DEFAULT_SETTINGS } from "@/types";
 import { scanInstrument } from "@/hooks/useMarketScan";
 import { activateIfTradeable } from "@/signals/activateHelper";
-import { saveSignal } from "@/storage/StorageProvider.ts";
+import { saveSignal } from "@/signals/signalStore.ts";
 
 const AUTO_REFRESH_MS = 30000; // 30s — safe under Twelve Data's free-tier rate limit
 
