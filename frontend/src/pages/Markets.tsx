@@ -3,7 +3,7 @@ import { DEFAULT_SETTINGS } from "@/types";
 import type { BopSignal, Instrument } from "@/types";
 import { getMarketDataProvider } from "@/market-data";
 import { scanMarkets, rankSignals } from "@/hooks/useMarketScan";
-import { saveSignal } from "@/signals/signalStore";
+import { activateIfTradeable } from "@/signals/activateHelper";
 import { SignalCard } from "@/components/SignalCard";
 import { DataRequired } from "@/components/DataRequired";
 
@@ -30,7 +30,7 @@ export function Markets() {
           if (!cancelled) setProgress({ done, total, current });
         });
         if (cancelled) return;
-        await Promise.all(signals.map((s) => saveSignal(s)));
+       await Promise.all(signals.map((s) => saveSignal(activateIfTradeable(s))));
         setResults(rankSignals(signals));
         setLastScanned(Date.now());
       } catch (err) {
