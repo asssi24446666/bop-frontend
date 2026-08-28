@@ -30,7 +30,7 @@ export function Markets() {
           if (!cancelled) setProgress({ done, total, current });
         });
         if (cancelled) return;
-       await Promise.all(signals.map((s) => saveSignal(activateIfTradeable(s))));
+        await Promise.all(signals.map((s) => saveSignal(activateIfTradeable(s))));
         setResults(rankSignals(signals));
         setLastScanned(Date.now());
       } catch (err) {
