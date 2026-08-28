@@ -14,7 +14,7 @@ async function registerTokenWithBackend(token: string): Promise<void> {
   const base = resolveApiBase();
   if (!base) return;
   try {
-    await fetch(${base}/api/push/register},
+    await fetch(`${base}/api/push/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, platform: "android" })
