@@ -1,4 +1,4 @@
-/ Small shared helper: any signal that came out of the engine as a
+// Small shared helper: any signal that came out of the engine as a
 // tradeable BUY/SELL is treated as immediately "entered" for tracking
 // purposes (this app is LIVE_ANALYSIS — no real broker order is
 // placed), so useSignalMonitor can watch it against live price. Any
