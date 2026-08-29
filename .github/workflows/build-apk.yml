@@ -43,6 +43,16 @@ jobs:
         run: npx cap sync android
         working-directory: frontend
 
+      - name: Add google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > frontend/android/app/google-services.json
+
+      - name: Add Google Services Gradle plugin (project-level)
+        run: |
+          sed -i "s/classpath 'com.android.tools.build:gradle:.*'/&\n        classpath 'com.google.gms:google-services:4.4.2'/" frontend/android/build.gradle
+
+      - name: Apply Google Services Gradle plugin (app-level)
+        run: echo "apply plugin: 'com.google.gms.google-services'" >> frontend/android/app/build.gradle
+
       - name: Make gradlew executable
         run: chmod +x gradlew
         working-directory: frontend/android
